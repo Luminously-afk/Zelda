@@ -434,6 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
     buildCharacterGrid();
     setActiveCharacter(activeCharacter);
     bindTriforceNav();
+    bindVideoModal();
 });
 
 function bindTriforceNav() {
@@ -455,6 +456,54 @@ function updateTriforceHero(id) {
     const c = characters[id];
     portrait.src = c.full;
     portrait.alt = c.name;
+}
+
+// --- VIDEO MODAL ---
+function toEmbedUrl(url) {
+    try {
+        const u = new URL(url);
+        const host = u.hostname.replace('www.', '');
+        let id = '';
+        if (host === 'youtube.com' || host === 'm.youtube.com') {
+            id = u.searchParams.get('v') || '';
+        } else if (host === 'youtu.be') {
+            id = u.pathname.slice(1);
+        }
+        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : '';
+    } catch (e) {
+        return '';
+    }
+}
+
+function bindVideoModal() {
+    const modal = document.getElementById('video-modal');
+    const frame = document.getElementById('video-frame');
+    const closeBtn = document.getElementById('video-close');
+    if (!modal || !frame || !closeBtn) return;
+
+    const open = (url) => {
+        const embed = toEmbedUrl(url);
+        if (!embed) return;
+        frame.src = embed;
+        modal.classList.remove('hidden');
+    };
+
+    const close = () => {
+        frame.src = '';
+        modal.classList.add('hidden');
+    };
+
+    document.querySelectorAll('[data-video]').forEach((btn) => {
+        btn.addEventListener('click', () => open(btn.dataset.video));
+    });
+
+    closeBtn.addEventListener('click', close);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.classList.contains('modal-backdrop')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) close();
+    });
 }
 
 async function sendChat() {
