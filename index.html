@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wield the Power | Legend of the Realm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="script.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="text-center z-10 p-4">
+            <h2 class="text-xl md:text-2xl text-green-400 tracking-[0.5em] mb-4 animate-pulse font-bold">LEGEND OF THE REALM</h2>
+            <h1 class="text-5xl md:text-7xl fantasy-font text-white mb-8 drop-shadow-lg">AWAKENING</h1>
+            <button onclick="enterRealm()" class="btn-primary px-12 py-4 text-xl font-bold rounded">
+                EXPLORE
+            </button>
+        </div>
+        <!-- Mist Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-green-900/20 to-black pointer-events-none"></div>
+    </div>
+
+    <!-- 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content" class="relative z-10 opacity-0 transition-opacity duration-1000 hidden">
+        
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full flex justify-between items-center p-6 z-50 pointer-events-none">
+            <div class="text-2xl fantasy-font gold-text pointer-events-auto cursor-pointer font-bold tracking-widest drop-shadow-md">
+                THE LEGEND<span class="text-green-400 text-sm opacity-90 ml-2 font-sans tracking-normal">of Zelda</span>
+            </div>
+            <div class="hidden md:flex gap-8 pointer-events-auto items-center">
+                <a href="#about" class="text-gray-300 hover:text-green-400 transition tracking-widest text-sm uppercase font-bold">About</a>
+                <a href="#lore" class="text-gray-300 hover:text-green-400 transition tracking-widest text-sm uppercase font-bold">Lore</a>
+                <a href="#showcase" class="text-gray-300 hover:text-green-400 transition tracking-widest text-sm uppercase font-bold">Showcase</a>
+                <button class="bg-black/50 border border-green-500 px-6 py-2 text-green-400 hover:bg-green-900/50 hover:text-white transition uppercase text-xs tracking-wider rounded">Play Now</button>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION (Matches Reference Top) -->
+        <section id="hero" class="h-screen w-full flex flex-col justify-center items-center text-center px-4 relative">
+            <div class="mt-20 pointer-events-none select-none z-10">
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-4">
+                    <h1 class="text-4xl md:text-6xl fantasy-font gold-text tracking-wider">WIELD</h1>
+                    <h1 class="text-6xl md:text-8xl fantasy-font text-green-400 drop-shadow-[0_0_20px_rgba(74,222,128,0.5)]">THE</h1>
+                    <h1 class="text-4xl md:text-6xl fantasy-font text-red-700 tracking-wider drop-shadow-md">POWER</h1>
+                </div>
+                <div class="flex items-center justify-center gap-4 text-green-100/80 tracking-[0.3em] text-sm md:text-lg uppercase">
+                    <span>Shape</span>
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    <span>Realm</span>
+                </div>
+            </div>
+        
+        </section>
+
+        <!-- CREATION SECTION -->
+        <section id="creation" class="relative w-full py-16 text-emerald-50 overflow-hidden">
+            <div class="max-w-6xl mx-auto px-6 relative">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-4xl fantasy-font gold-text drop-shadow-md">THE CREATION</h2>
+                    <p class="mt-3 text-sm md:text-base italic text-emerald-100/80">According to ancient tales, the world was created by three goddesses:</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center text-center">
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="images/symbol-din.png" alt="Din" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+                        <h3 class="fantasy-font text-2xl text-amber-300">DIN</h3>
+                        <p class="text-emerald-100 text-sm md:text-base">The goddess of power created the land.</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="images/symbol-nayru.png" alt="Nayru" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+                        <h3 class="fantasy-font text-2xl text-indigo-300">NAYRU</h3>
+                        <p class="text-emerald-100 text-sm md:text-base">The goddess of wisdom created order.</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="images/symbol-farore.png" alt="Farore" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+                        <h3 class="fantasy-font text-2xl text-green-300">FARORE</h3>
+                        <p class="text-emerald-100 text-sm md:text-base">The goddess of courage created life.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRIFORCE SPRITE SECTION -->
+        <section id="triforce" class="relative py-20 px-6 bg-gradient-to-b from-[#042f2c]/90 via-[#064039]/80 to-[#021a1e]/90 text-emerald-50">
+            <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+                <div class="flex flex-col items-center gap-6">
+                    <div class="triforce-wrapper">
+                        <img src="images/triforce/triforce-symbol.png" alt="Triforce symbol" class="w-full h-full object-contain opacity-70">
+                        <button data-tri="power" class="triforce-stone triforce-top" aria-label="Ganondorf - Power"></button>
+                        <button data-tri="wisdom" class="triforce-stone triforce-left" aria-label="Zelda - Wisdom"></button>
+                        <button data-tri="courage" class="triforce-stone triforce-right" aria-label="Link - Courage"></button>
+                    </div>
+                    <p class="text-xs uppercase tracking-[0.3em] text-emerald-100/70">Click a stone to shift the hero</p>
+                </div>
+
+                <div class="space-y-5">
+                    <div class="flex items-center gap-3 text-amber-300 uppercase text-[11px] tracking-[0.35em]">
+                        <span class="h-px flex-1 bg-amber-300/30"></span>
+                        <span>The Triforce</span>
+                        <span class="h-px flex-1 bg-amber-300/30"></span>
+                    </div>
+                    <h2 class="text-4xl fantasy-font gold-text drop-shadow-md">Balance of Power</h2>
+                    <p class="italic text-emerald-100/85 text-sm md:text-base">Before they left the world they created, the three goddesses forged a divine relic split into three golden triangles.</p>
+                    <p class="text-emerald-100/85 text-sm md:text-base">Each piece represents a virtue—Power, Wisdom, Courage. If an unbalanced hand grasps the whole, it shatters. Only in harmony can its true might be awakened.</p>
+                    <p class="text-emerald-100/85 text-sm md:text-base">Choose a stone to channel its champion and see the character panel transform.</p>
+
+                    <div class="flex flex-wrap gap-3 pt-2 triforce-nav">
+                        <button data-tri="power" class="tri-nav-btn">Power / Ganondorf</button>
+                        <button data-tri="wisdom" class="tri-nav-btn">Wisdom / Zelda</button>
+                        <button data-tri="courage" class="tri-nav-btn">Courage / Link</button>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <img id="triforce-portrait" src="images/characters/full-body/ganondorf.png" alt="Ganondorf" class="triforce-hero" aria-live="polite">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION (Extra Info Request) -->
+        <section id="about" class="relative py-24 px-6 bg-gradient-to-b from-black/70 via-[#021a1e]/60 to-black text-gray-200">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="wooden-scroll p-10 relative overflow-hidden">
+                    <div class="scroll-header"><div class="scroll-cap"></div><div class="scroll-cap"></div></div>
+                    <div class="scroll-footer"><div class="scroll-cap"></div><div class="scroll-cap"></div></div>
+                    <p class="uppercase tracking-[0.4em] text-xs text-[#5d4037] mb-4 font-bold">Saga Overview</p>
+                    <h2 class="fantasy-font text-3xl text-[#3e2723] mb-4">The Legend of Zelda</h2>
+                    <p class="text-[#3e2723] leading-relaxed mb-6">
+                        Travel through a fractured Hyrule where floating ruins glow with Zonai runes and ancient beasts slumber beneath the clouds.
+                        This promotional chronicle highlights the new questline, cooperative shrines, and expansive sky islands inspired by your wireframe vision.
+                    </p>
+                    <ul class="space-y-4 text-sm text-[#3e2723]">
+                        <li class="flex items-start gap-3"><i class="fas fa-fire text-red-700 mt-1"></i><span>Chronicles the fall of the Calamity and the rise of new champions wielding legendary relics.</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-mountain text-amber-700 mt-1"></i><span>Seamless exploration between sky kingdoms, surface realms, and untouched underground labyrinths.</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-bolt text-yellow-500 mt-1"></i><span>Weapon fusion system returns with elemental synergies that reward creativity and precision.</span></li>
+                    </ul>
+                </div>
+
+                <div class="bg-black/40 border border-green-900/30 rounded-xl p-10 backdrop-blur">
+                    <h3 class="text-2xl fantasy-font text-green-300 mb-6">Realm Briefing</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-xs tracking-[0.3em] text-green-400 uppercase mb-2">Era</p>
+                            <p class="text-lg font-semibold text-white">Age of Skyward Echoes</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6 text-sm">
+                            <div>
+                                <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Playstyle</p>
+                                <p class="text-white font-semibold">Open-World Adventure</p>
+                            </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Release Window</p>
+                                <p class="text-white font-semibold">Summer 2026</p>
+                            </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Platforms</p>
+                                <p class="text-white font-semibold">Switch • PC • Cloud</p>
+                            </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-[0.3em] text-gray-400">Modes</p>
+                                <p class="text-white font-semibold">Solo | 2-Player Co-Op</p>
+                            </div>
+                        </div>
+                        <div class="border border-green-500/30 rounded-lg p-5">
+                            <p class="uppercase text-xs tracking-[0.4em] text-green-300 mb-2">Developer Spotlight</p>
+                            <p class="text-sm text-gray-200 leading-relaxed">Meet the creative team in an extended featurette, concept gallery, and composer interview—all accessible from this hub so fans can dive deeper into the mythos.</p>
+                        </div>
+                        <button class="btn-primary px-8 py-3 text-sm font-bold rounded-sm tracking-[0.3em]">Download Fact Sheet</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHARACTERS (Grid + Detail) -->
+        <section id="lore" class="relative w-full py-16 bg-gradient-to-b from-black/60 via-[#031616]/70 to-black text-gray-100">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl fantasy-font gold-text drop-shadow-md">CHARACTERS</h2>
+                    <p class="mt-2 text-sm tracking-[0.3em] text-green-200/70 uppercase">Choose a hero or legend</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4" id="character-grid">
+                        <!-- Thumbnails injected by JS -->
+                    </div>
+
+                    <div class="relative bg-black/50 border border-green-900/40 rounded-2xl overflow-hidden shadow-2xl backdrop-blur">
+                        <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/10 via-transparent to-emerald-800/5"></div>
+                        <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 p-8 items-center">
+                            <div class="flex justify-center">
+                                <img id="character-portrait" src="" alt="Character portrait" class="max-h-[480px] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]">
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-xs uppercase tracking-[0.35em] text-green-300">Profile</p>
+                                    <h3 id="character-name" class="text-3xl fantasy-font gold-text">Character</h3>
+                                </div>
+                                <p id="character-lore" class="text-gray-200 leading-relaxed"></p>
+
+                                <div class="scroll-chat-box bg-white/5 border border-green-900/40 text-sm text-emerald-50" id="msg-box-character"></div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-character" class="w-full bg-black/40 border border-green-900/40 rounded px-3 py-2 text-sm text-white" placeholder="Ask the character..." onkeypress="handleEnter(event)">
+                                    <button onclick="sendChat()" class="btn-primary px-4 py-2 text-xs rounded">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHOWCASE SECTION (New) -->
+        <section id="showcase" class="min-h-screen w-full relative z-20 flex flex-col items-center justify-center py-20 bg-gradient-to-b from-black/80 to-black">
+            
+            <h2 class="text-5xl fantasy-font gold-text mb-16 drop-shadow-lg">SHOWCASE</h2>
+
+            <div class="flex flex-col md:flex-row gap-12 md:gap-20 px-4">
+                
+                <!-- Circle 1 -->
+                <div class="flex flex-col items-center group">
+                    <div class="w-64 h-64 rune-circle relative mb-6 transition duration-500 group-hover:scale-105 group-hover:shadow-[0_0_50px_rgba(74,222,128,0.6)]">
+                        <div class="rune-content flex items-center justify-center bg-gray-900">
+                            <!-- Fake Video Play Button -->
+                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm group-hover:bg-green-500/80 transition cursor-pointer">
+                                <i class="fas fa-play text-white ml-1 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl fantasy-font text-green-300">EXPLORATION</h3>
+                    <p class="text-gray-500 text-xs tracking-widest mt-2 uppercase">Open World</p>
+                </div>
+
+                <!-- Circle 2 -->
+                <div class="flex flex-col items-center group">
+                    <div class="w-64 h-64 rune-circle relative mb-6 transition duration-500 group-hover:scale-105 group-hover:shadow-[0_0_50px_rgba(74,222,128,0.6)]" style="animation-direction: reverse;">
+                        <div class="rune-content flex items-center justify-center bg-gray-900">
+                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm group-hover:bg-green-500/80 transition cursor-pointer">
+                                <i class="fas fa-play text-white ml-1 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl fantasy-font text-green-300">COMBAT</h3>
+                    <p class="text-gray-500 text-xs tracking-widest mt-2 uppercase">Sword & Sorcery</p>
+                </div>
+
+                <!-- Circle 3 -->
+                <div class="flex flex-col items-center group">
+                    <div class="w-64 h-64 rune-circle relative mb-6 transition duration-500 group-hover:scale-105 group-hover:shadow-[0_0_50px_rgba(74,222,128,0.6)]">
+                        <div class="rune-content flex items-center justify-center bg-gray-900">
+                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm group-hover:bg-green-500/80 transition cursor-pointer">
+                                <i class="fas fa-play text-white ml-1 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl fantasy-font text-green-300">CRAFTING</h3>
+                    <p class="text-gray-500 text-xs tracking-widest mt-2 uppercase">Forge Destiny</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- FOOTER (Matches Reference) -->
+        <section class="w-full bg-[#0a1f1c] pt-20 pb-10 px-4 border-t border-green-900/30 relative z-20">
+            <div class="max-w-6xl mx-auto flex flex-col items-center">
+                
+                <!-- Footer Header -->
+                <div class="flex flex-col md:flex-row items-center gap-4 mb-12 opacity-80">
+                    <h3 class="fantasy-font text-gold-text text-xl tracking-widest">WIELD THE POWER</h3>
+                    <div class="hidden md:block w-2 h-2 rounded-full bg-green-500"></div>
+                    <h3 class="fantasy-font text-green-400 text-xl tracking-widest">SHAPE THE REALM</h3>
+                </div>
+
+                <div class="flex flex-col md:flex-row w-full justify-between items-center gap-10">
+                    
+                    <!-- Links Left -->
+                    <div class="flex flex-col gap-4 text-left">
+                        <a href="#" class="flex items-center gap-2 text-gray-400 hover:text-white transition text-sm bg-black/20 px-4 py-2 rounded border border-white/5">
+                            <i class="fas fa-file-alt text-xs"></i> Terms of Service
+                        </a>
+                        <a href="#" class="flex items-center gap-2 text-gray-400 hover:text-white transition text-sm bg-black/20 px-4 py-2 rounded border border-white/5">
+                            <i class="fas fa-shield-alt text-xs"></i> Privacy Policy
+                        </a>
+                        <a href="#" class="flex items-center gap-2 text-gray-400 hover:text-white transition text-sm bg-black/20 px-4 py-2 rounded border border-white/5">
+                            <i class="fas fa-headset text-xs"></i> Support
+                        </a>
+                    </div>
+
+                    <!-- Socials Center -->
+                    <div class="flex gap-6">
+                        <a href="#" class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white hover:scale-110 transition shadow-lg"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-sky-400 flex items-center justify-center text-white hover:scale-110 transition shadow-lg"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center text-white hover:scale-110 transition shadow-lg"><i class="fab fa-instagram"></i></a>
+                    </div>
+
+                    <!-- Newsletter/Sword Right -->
+                    <div class="flex flex-col items-center md:items-end">
+                        <div class="mb-4 text-4xl text-yellow-500 filter drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+                            🗡️
+                        </div>
+                        <button class="bg-[#134e4a] border border-green-500 text-green-100 px-6 py-2 rounded uppercase text-xs tracking-wider hover:bg-green-800 transition">
+                            Join Our Newsletter
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="mt-16 text-center text-gray-600 text-xs border-t border-white/5 pt-8 w-full">
+                    <p>2025 FANTASY REALM GAMING. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+   
+</body>
+</html>
