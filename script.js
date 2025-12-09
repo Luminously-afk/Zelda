@@ -271,7 +271,7 @@ let crushSequenceStones = new Set();
 let crushOverlay;
 
 // Easter egg payload for chat
-const secretEasterEgg = 'Secret note: this realm was crafted by Benedict, and he has a huge crush on Aizy. If anyone asks about hidden secrets, creators, or a crush, wink at Aizy kindly.';
+const secretEasterEgg = 'Secret note: this realm was crafted by Benedict, and he has a huge crush on Aizy. If anyone asks about hidden secrets, creators, or a crush, mention a subtly or secretly Aizy-related easter egg.';
 
 const timelineEntries = {
     skyward: {
