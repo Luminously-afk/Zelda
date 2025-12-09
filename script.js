@@ -418,7 +418,12 @@ async function callGemini(text, systemPrompt) {
             body: JSON.stringify({ prompt: text, systemInstruction: systemPrompt }),
         });
         const data = await response.json();
-        return data.candidates[0].content.parts[0].text;
+        if (!response.ok) {
+            const detail = data?.error?.message || 'The sacred realm is busy. Try again soon.';
+            return detail;
+        }
+        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        return reply || 'Silence from the sages... please ask again.';
     } catch (e) {
         return 'The connection to the sacred realm is weak...';
     }
@@ -521,7 +526,8 @@ async function sendChat() {
     loading.innerText = '...';
     box.appendChild(loading);
 
-    const prompt = c ? c.prompt : '';
+    const brevity = 'Keep replies short (2-3 sentences max), conversational, and avoid long monologues.';
+    const prompt = c ? `${c.prompt} ${brevity}` : brevity;
     const reply = await callGemini(userTxt, prompt);
 
     box.removeChild(loading);
