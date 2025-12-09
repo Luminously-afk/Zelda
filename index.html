@@ -17,8 +17,8 @@
     <!-- Splash Screen -->
     <div id="splash-screen">
         <div class="text-center z-10 p-4">
-            <h2 class="text-xl md:text-2xl text-green-400 tracking-[0.5em] mb-4 animate-pulse font-bold">LEGEND OF THE REALM</h2>
-            <h1 class="text-5xl md:text-7xl fantasy-font text-white mb-8 drop-shadow-lg">AWAKENING</h1>
+            <h2 class="text-xl md:text-2xl text-green-400 tracking-[0.5em] mb-4 animate-pulse font-bold">GROSSARY</h2>
+            <h1 class="text-5xl md:text-7xl fantasy-font text-white mb-8 drop-shadow-lg">LEGEND OF ZELDA</h1>
             <button onclick="enterRealm()" class="btn-primary px-12 py-4 text-xl font-bold rounded">
                 EXPLORE
             </button>
@@ -39,6 +39,7 @@
                 THE LEGEND<span class="text-green-400 text-sm opacity-90 ml-2 font-sans tracking-normal">of Zelda</span>
             </div>
             <div class="hidden md:flex gap-8 pointer-events-auto items-center">
+                <a href="#timeline" class="text-gray-300 hover:text-green-400 transition tracking-widest text-sm uppercase font-bold">Timeline</a>
                 <a href="#about" class="text-gray-300 hover:text-green-400 transition tracking-widest text-sm uppercase font-bold">About</a>
                 <a href="#lore" class="text-gray-300 hover:text-green-400 transition tracking-widest text-sm uppercase font-bold">Lore</a>
                 <a href="#showcase" class="text-gray-300 hover:text-green-400 transition tracking-widest text-sm uppercase font-bold">Showcase</a>
@@ -63,40 +64,15 @@
         
         </section>
 
-        <!-- CREATION SECTION -->
-        <section id="creation" class="relative w-full py-16 text-emerald-50 overflow-hidden">
-            <div class="max-w-6xl mx-auto px-6 relative">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl md:text-4xl fantasy-font gold-text drop-shadow-md">THE CREATION</h2>
-                    <p class="mt-3 text-sm md:text-base italic text-emerald-100/80">According to ancient tales, the world was created by three goddesses:</p>
-                </div>
+        
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center text-center">
-                    <div class="flex flex-col items-center gap-3">
-                        <img src="images/symbol-din.png" alt="Din" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
-                        <h3 class="fantasy-font text-2xl text-amber-300">DIN</h3>
-                        <p class="text-emerald-100 text-sm md:text-base">The goddess of power created the land.</p>
-                    </div>
-                    <div class="flex flex-col items-center gap-3">
-                        <img src="images/symbol-nayru.png" alt="Nayru" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
-                        <h3 class="fantasy-font text-2xl text-indigo-300">NAYRU</h3>
-                        <p class="text-emerald-100 text-sm md:text-base">The goddess of wisdom created order.</p>
-                    </div>
-                    <div class="flex flex-col items-center gap-3">
-                        <img src="images/symbol-farore.png" alt="Farore" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
-                        <h3 class="fantasy-font text-2xl text-green-300">FARORE</h3>
-                        <p class="text-emerald-100 text-sm md:text-base">The goddess of courage created life.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+      
 
         <!-- TRIFORCE SPRITE SECTION -->
         <section id="triforce" class="relative py-20 px-6 bg-gradient-to-b from-[#042f2c]/90 via-[#064039]/80 to-[#021a1e]/90 text-emerald-50">
             <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
                 <div class="flex flex-col items-center gap-6">
                     <div class="triforce-wrapper">
-                        <img src="images/triforce/triforce-symbol.png" alt="Triforce symbol" class="w-full h-full object-contain opacity-70">
                         <button data-tri="power" class="triforce-stone triforce-top" aria-label="Ganondorf - Power"></button>
                         <button data-tri="wisdom" class="triforce-stone triforce-left" aria-label="Zelda - Wisdom"></button>
                         <button data-tri="courage" class="triforce-stone triforce-right" aria-label="Link - Courage"></button>
@@ -128,7 +104,132 @@
             </div>
         </section>
 
-        <!-- ABOUT SECTION (Extra Info Request) -->
+  <!-- CREATION SECTION -->
+        <section id="creation" class="relative w-full py-16 text-emerald-50 overflow-hidden">
+            <div class="max-w-6xl mx-auto px-6 relative">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-4xl fantasy-font gold-text drop-shadow-md">THE CREATION</h2>
+                    <p class="mt-3 text-sm md:text-base italic text-emerald-100/80">According to ancient tales, the world was created by three goddesses:</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center text-center">
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="images/symbol-din.png" alt="Din" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+                        <h3 class="fantasy-font text-2xl text-amber-300">DIN</h3>
+                        <p class="text-emerald-100 text-sm md:text-base">The goddess of power created the land.</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="images/symbol-nayru.png" alt="Nayru" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+                        <h3 class="fantasy-font text-2xl text-indigo-300">NAYRU</h3>
+                        <p class="text-emerald-100 text-sm md:text-base">The goddess of wisdom created order.</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="images/symbol-farore.png" alt="Farore" class="w-48 md:w-56 drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+                        <h3 class="fantasy-font text-2xl text-green-300">FARORE</h3>
+                        <p class="text-emerald-100 text-sm md:text-base">The goddess of courage created life.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+     <!-- TIMELINE SECTION -->
+        <section id="timeline" class="relative w-full py-20 px-6 history-section text-emerald-50">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl fantasy-font gold-text drop-shadow-md">THE HISTORY OF HYRULE</h2>
+                    <p class="mt-3 text-lg italic text-emerald-100/80">Chart the eras and see the legend shift as you move along the timeline.</p>
+                </div>
+
+                <div class="history-hero">
+                    <div class="history-left">
+                        <img id="history-logo" src="images/history/1%20logo.png" alt="Era logo" class="history-logo" loading="lazy">
+                        <h3 id="history-title" class="fantasy-font text-2xl md:text-3xl text-amber-200 mt-4">Era title placeholder</h3>
+                        <p id="history-body" class="text-sm md:text-base text-emerald-100/80 leading-relaxed mt-4">Body copy placeholder for this era. Replace with your summary of the chapter.</p>
+                    </div>
+
+                    <div class="history-right" id="history-visual">
+                        <img id="history-image" src="images/history/1%20right.jpg" alt="Era key art" class="history-image" loading="lazy">
+                        <div id="history-empty" class="history-visual-empty hidden">Awaiting artwork for this branch of the legend.</div>
+                    </div>
+                </div>
+
+                <p class="mt-10 text-center text-xs md:text-sm tracking-[0.25em] text-emerald-100/70">Tap a marker to change the era</p>
+
+                <div class="timeline-bar" id="timeline-bar">
+                    <div class="timeline-start">The Era of the Goddess Hylia</div>
+                    <div class="timeline-track">
+                        <div class="timeline-stop" data-era="skyward">
+                            <span class="timeline-label-top">Skyward Sword</span>
+                            <button class="timeline-node active" aria-label="Skyward"></button>
+                            <span class="timeline-label-bottom">Sky Era</span>
+                        </div>
+                        <div class="timeline-stop" data-era="mimish">
+                            <span class="timeline-label-bottom">The Rise of the Evil Vaati</span>
+                            <button class="timeline-node" aria-label="Mimish"></button>
+                            <span class="timeline-label-top">Force Era</span>
+                        </div>
+                        
+                        <div class="timeline-stop" data-era="fourswords">
+                            <span class="timeline-label-top">The Resurrection of Vaati</span>
+                            <button class="timeline-node" aria-label="Four Swords"></button>
+                        </div>
+                        <div class="timeline-stop" data-era="legend">
+                            <span class="timeline-label-top">The World Becomes the Dark World.</span>
+                            <button class="timeline-node" aria-label="Ocarina Time"></button>
+                            <span class="timeline-label-bottom">Era of Chaos</span>
+                            <span class="timeline-label-top">The Establishment of Hyrule Kingdom</span>
+                            <span class="timeline-label-bottom">Era of Prosperity</span>
+                        </div>
+                        <div class="timeline-stop" data-era="future">
+                            <span class="timeline-label-top">The Hero is Defeated</span>
+                            <button class="timeline-node" aria-label="Future legend"></button>
+                            <span class="timeline-label-bottom">The Hero is Triumphant</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHARACTERS (Grid + Detail) -->
+        <section id="lore" class="relative w-full py-16 bg-gradient-to-b from-black/60 via-[#031616]/70 to-black text-gray-100">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl fantasy-font gold-text drop-shadow-md">CHARACTERS</h2>
+                    <p class="mt-2 text-sm tracking-[0.3em] text-green-200/70 uppercase">Choose a hero or legend</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4" id="character-grid">
+                        <!-- Thumbnails injected by JS -->
+                    </div>
+
+                    <div class="relative bg-black/50 border border-green-900/40 rounded-2xl overflow-hidden shadow-2xl backdrop-blur">
+                        <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/10 via-transparent to-emerald-800/5"></div>
+                        <div class="relative grid grid-cols-1 md:grid-cols-[1fr_1.35fr] gap-10 p-10 items-center">
+                            <div class="flex justify-center">
+                                <img id="character-portrait" src="" alt="Character portrait" class="max-h-[480px] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]">
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-xs uppercase tracking-[0.35em] text-green-300">Profile</p>
+                                    <h3 id="character-name" class="text-3xl fantasy-font gold-text">Character</h3>
+                                </div>
+                                <p id="character-lore" class="text-gray-200 leading-relaxed"></p>
+
+                                <div class="scroll-chat-box bg-white/5 border border-green-900/40 text-sm text-emerald-50" id="msg-box-character"></div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="input-character" class="w-full bg-black/40 border border-green-900/40 rounded px-3 py-2 text-sm text-white" placeholder="Ask the character..." onkeypress="handleEnter(event)">
+                                    <button onclick="sendChat()" class="btn-primary px-4 py-2 text-xs rounded">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+           <!-- ABOUT SECTION (Extra Info Request) -->
         <section id="about" class="relative py-24 px-6 bg-gradient-to-b from-black/70 via-[#021a1e]/60 to-black text-gray-200">
             <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="wooden-scroll p-10 relative overflow-hidden">
@@ -177,44 +278,6 @@
                             <p class="text-sm text-gray-200 leading-relaxed">Meet the creative team in an extended featurette, concept gallery, and composer interview—all accessible from this hub so fans can dive deeper into the mythos.</p>
                         </div>
                         <button class="btn-primary px-8 py-3 text-sm font-bold rounded-sm tracking-[0.3em]">Download Fact Sheet</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CHARACTERS (Grid + Detail) -->
-        <section id="lore" class="relative w-full py-16 bg-gradient-to-b from-black/60 via-[#031616]/70 to-black text-gray-100">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl fantasy-font gold-text drop-shadow-md">CHARACTERS</h2>
-                    <p class="mt-2 text-sm tracking-[0.3em] text-green-200/70 uppercase">Choose a hero or legend</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4" id="character-grid">
-                        <!-- Thumbnails injected by JS -->
-                    </div>
-
-                    <div class="relative bg-black/50 border border-green-900/40 rounded-2xl overflow-hidden shadow-2xl backdrop-blur">
-                        <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/10 via-transparent to-emerald-800/5"></div>
-                        <div class="relative grid grid-cols-1 md:grid-cols-[1fr_1.35fr] gap-10 p-10 items-center">
-                            <div class="flex justify-center">
-                                <img id="character-portrait" src="" alt="Character portrait" class="max-h-[480px] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]">
-                            </div>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="text-xs uppercase tracking-[0.35em] text-green-300">Profile</p>
-                                    <h3 id="character-name" class="text-3xl fantasy-font gold-text">Character</h3>
-                                </div>
-                                <p id="character-lore" class="text-gray-200 leading-relaxed"></p>
-
-                                <div class="scroll-chat-box bg-white/5 border border-green-900/40 text-sm text-emerald-50" id="msg-box-character"></div>
-                                <div class="flex gap-2">
-                                    <input type="text" id="input-character" class="w-full bg-black/40 border border-green-900/40 rounded px-3 py-2 text-sm text-white" placeholder="Ask the character..." onkeypress="handleEnter(event)">
-                                    <button onclick="sendChat()" class="btn-primary px-4 py-2 text-xs rounded">Send</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -276,7 +339,7 @@
             </div>
 
         </section>
-
+        
         <!-- Video Modal -->
         <div id="video-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Video Player">
             <div class="modal-inner">

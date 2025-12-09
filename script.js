@@ -263,6 +263,49 @@ const characterOrder = ['link','zelda','ganon','ganondorf','gerudo','goron','gre
 const triforceBindings = { power: 'ganondorf', wisdom: 'zelda', courage: 'link' };
 let activeCharacter = 'ganondorf';
 
+const timelineEntries = {
+    skyward: {
+        title: 'Skyward Era',
+        subtitle: 'Top line placeholder',
+        body: 'Armed with the Goddess Sword, Link leaves his home on the floating island of Skyloft to rescue his childhood friend, Zelda, who has been kidnapped.',
+        link: '#',
+        logo: 'images/history/1%20logo.png',
+        image: 'images/history/1%20right.jpg',
+    },
+    mimish: {
+        title: 'The Mimish Cap',
+        subtitle: 'Top line placeholder',
+        body: 'Link must shrink to the size of a bug to restore the Picori Sword and save Hyrule from the evil Vaati.',
+        link: '#',
+        logo: 'images/history/2%20logo.png',
+        image: 'images/history/2%20right.jpg',
+    },
+    legend: {
+        title: 'Ocarina of Time',
+        subtitle: 'Top line placeholder',
+        body: 'Ganondorf has claimed the Triforce and taken over Hyrule. Link must now summon the seven sages to imprison the villain and save the kingdom.',
+        link: '#',
+        logo: 'images/history/4%20logo.png',
+        image: 'images/history/4%20right.jpg',
+    },
+    fourswords: {
+        title: 'Four Sword',
+        subtitle: 'Top line placeholder',
+        body: 'The evil sorcerer Vaati has risen again. Now Link must use the Four Sword to split into four heroes to defeat him and save Princess Zelda.',
+        link: '#',
+        logo: 'images/history/3%20logo.png',
+        image: 'images/history/3%20right.jpg',
+    },
+    future: {
+        title: 'The fate of the hero',
+        subtitle: 'Top line placeholder',
+        body: 'At this point, time splits into two paths—one where the hero of Hyrule is victorious, and another where he falls in battle.',
+        link: '#',
+        logo: '',
+        image: '',
+    },
+};
+
 function buildCharacterGrid() {
     const grid = document.getElementById('character-grid');
     if (!grid) return;
@@ -436,6 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setActiveCharacter(activeCharacter);
     bindTriforceNav();
     bindVideoModal();
+    bindTimeline();
 });
 
 function bindTriforceNav() {
@@ -448,6 +492,61 @@ function bindTriforceNav() {
             }
         });
     });
+}
+
+function bindTimeline() {
+    const stops = document.querySelectorAll('.timeline-stop');
+    if (!stops.length) return;
+    stops.forEach((stop) => {
+        stop.addEventListener('click', () => {
+            const era = stop.getAttribute('data-era');
+            setTimelineEra(era);
+        });
+    });
+    setTimelineEra('skyward');
+}
+
+function setTimelineEra(key) {
+    const data = timelineEntries[key];
+    if (!data) return;
+
+    const logo = document.getElementById('history-logo');
+    const title = document.getElementById('history-title');
+    const subtitle = document.getElementById('history-subtitle');
+    const body = document.getElementById('history-body');
+    const link = document.getElementById('history-link');
+    const imageWrap = document.getElementById('history-visual');
+    const image = document.getElementById('history-image');
+    const empty = document.getElementById('history-empty');
+
+    if (logo) {
+        if (data.logo) {
+            logo.src = data.logo;
+            logo.classList.remove('hidden');
+        } else {
+            logo.classList.add('hidden');
+        }
+    }
+    if (title) title.textContent = data.title || '';
+    if (subtitle) subtitle.textContent = data.subtitle || '';
+    if (body) body.textContent = data.body || '';
+    if (link) link.href = data.link || '#';
+
+    if (imageWrap && image) {
+        if (data.image) {
+            image.src = data.image;
+            image.alt = data.title;
+            image.classList.remove('hidden');
+            if (empty) empty.classList.add('hidden');
+        } else {
+            image.classList.add('hidden');
+            if (empty) empty.classList.remove('hidden');
+        }
+    }
+
+    document.querySelectorAll('.timeline-node').forEach((node) => node.classList.remove('active'));
+    const activeStop = document.querySelector(`.timeline-stop[data-era="${key}"] .timeline-node`);
+    if (activeStop) activeStop.classList.add('active');
 }
 
 function updateTriforceHero(id) {
