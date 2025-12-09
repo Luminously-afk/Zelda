@@ -407,6 +407,18 @@ h1, h2, h3, .fantasy-font {
     pointer-events: none;
 }
 
+.history-section::before {
+    content: "";
+    position: absolute;
+    inset: -15% -5% 5% -5%;
+    background: radial-gradient(circle at 30% 10%, rgba(76, 175, 140, 0.14), transparent 45%),
+                radial-gradient(circle at 70% 80%, rgba(55, 115, 95, 0.16), transparent 55%);
+    opacity: 0.8;
+    pointer-events: none;
+    transform: translateY(var(--history-parallax, 0px));
+    transition: transform 0.15s ease-out;
+}
+
 .history-hero {
     position: relative;
     z-index: 1;
@@ -624,6 +636,96 @@ h1, h2, h3, .fantasy-font {
         width: 100%;
     }
 }
+
+    /* Crush Easter Egg Overlay */
+    .crush-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        z-index: 70;
+        background: radial-gradient(circle at 50% 55%, rgba(4, 64, 57, 0.35), transparent 55%);
+    }
+
+    .crush-overlay.show {
+        opacity: 1;
+    }
+
+    .crush-card {
+        position: relative;
+        max-width: 520px;
+        width: 90%;
+        padding: 20px 24px;
+        background: rgba(2, 26, 30, 0.85);
+        border: 1px solid rgba(74, 222, 128, 0.45);
+        border-radius: 16px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.55), 0 0 25px rgba(52, 211, 153, 0.25);
+        text-align: center;
+        backdrop-filter: blur(6px);
+        overflow: hidden;
+    }
+
+    .crush-label {
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        font-size: 11px;
+        color: #6ee7b7;
+        margin-bottom: 6px;
+    }
+
+    .crush-title {
+        font-family: 'Cinzel Decorative', serif;
+        color: #f472b6;
+        margin: 0 0 8px;
+        text-shadow: 0 0 14px rgba(244, 114, 182, 0.4);
+    }
+
+    .crush-sub {
+        color: #e0ffe4;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .crush-heart {
+        position: absolute;
+        bottom: 10%;
+        width: 16px;
+        height: 16px;
+        background: radial-gradient(circle at 30% 30%, #fef9c3, #f472b6 70%);
+        transform: rotate(45deg);
+        border-radius: 4px 4px 0 0;
+        opacity: 0;
+        animation: float-heart 5s ease-in forwards;
+        filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.35));
+    }
+
+    .crush-heart::before,
+    .crush-heart::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: radial-gradient(circle at 30% 30%, #fef9c3, #f472b6 70%);
+        border-radius: 50%;
+        top: -8px;
+        left: 0;
+    }
+
+    .crush-heart::after {
+        top: 0;
+        left: -8px;
+    }
+
+    @keyframes float-heart {
+        0% { transform: translate3d(0, 0, 0) scale(0.8) rotate(45deg); opacity: 0; }
+        20% { opacity: 0.95; }
+        100% { transform: translate3d(var(--drift, 0px), -170px, 0) scale(1.5) rotate(45deg); opacity: 0; }
+    }
 
 @media (max-width: 640px) {
     #hero h1 {

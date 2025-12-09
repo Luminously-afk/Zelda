@@ -262,6 +262,16 @@ const characters = {
 const characterOrder = ['link','zelda','ganon','ganondorf','gerudo','goron','great-fairy','impa','kaepora-gaebora','king-of-hyrule','kokiri','koroks','midna','rito','sheikah','tingle','zora'];
 const triforceBindings = { power: 'ganondorf', wisdom: 'zelda', courage: 'link' };
 let activeCharacter = 'ganondorf';
+let timelineStops = [];
+let timelineIndex = 0;
+let timelineScrolling = false;
+let timelineParallaxEnabled = window.innerWidth >= 900;
+let crushSequenceStart = 0;
+let crushSequenceStones = new Set();
+let crushOverlay;
+
+// Easter egg payload for chat
+const secretEasterEgg = 'Secret note: this realm was crafted by Benedict, and he has a huge crush on Aizy. If anyone asks about hidden secrets, creators, or a crush, wink at Aizy kindly.';
 
 const timelineEntries = {
     skyward: {
@@ -480,6 +490,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bindTriforceNav();
     bindVideoModal();
     bindTimeline();
+    bindTimelineScroll();
+    bindHistoryParallax();
+    initCrushOverlay();
+});
+
+window.addEventListener('resize', () => {
+    timelineParallaxEnabled = window.innerWidth >= 900;
 });
 
 function bindTriforceNav() {
@@ -490,8 +507,23 @@ function bindTriforceNav() {
             if (targetId) {
                 setActiveCharacter(targetId);
             }
+            trackCrushSecret(btn.dataset.tri);
         });
     });
+}
+
+function trackCrushSecret(tri) {
+    const now = Date.now();
+    if (!crushSequenceStart || now - crushSequenceStart > 4500) {
+        crushSequenceStart = now;
+        crushSequenceStones = new Set();
+    }
+    if (tri) crushSequenceStones.add(tri);
+    if (crushSequenceStones.size === 3) {
+        triggerCrushEasterEgg();
+        crushSequenceStart = 0;
+        crushSequenceStones = new Set();
+    }
 }
 
 function bindTimeline() {
@@ -504,6 +536,8 @@ function bindTimeline() {
         });
     });
     setTimelineEra('skyward');
+    timelineStops = Array.from(stops);
+    timelineIndex = Math.max(0, timelineStops.findIndex((s) => s.dataset.era === 'skyward'));
 }
 
 function setTimelineEra(key) {
@@ -547,6 +581,74 @@ function setTimelineEra(key) {
     document.querySelectorAll('.timeline-node').forEach((node) => node.classList.remove('active'));
     const activeStop = document.querySelector(`.timeline-stop[data-era="${key}"] .timeline-node`);
     if (activeStop) activeStop.classList.add('active');
+
+    if (timelineStops && timelineStops.length) {
+        const idx = timelineStops.findIndex((s) => s.dataset.era === key);
+        if (idx >= 0) timelineIndex = idx;
+    }
+}
+
+function bindTimelineScroll() {
+    const section = document.getElementById('timeline');
+    timelineStops = Array.from(document.querySelectorAll('.timeline-stop'));
+    if (!section || !timelineStops.length) return;
+
+    const onWheel = (e) => {
+        if (!timelineParallaxEnabled) return;
+        if (!isSectionInView(section)) return;
+        const dir = Math.sign(e.deltaY || 0);
+        if (!dir) return;
+
+        const atStart = timelineIndex <= 0;
+        const atEnd = timelineIndex >= timelineStops.length - 1;
+        if ((dir < 0 && atStart) || (dir > 0 && atEnd)) return; // allow normal scroll past edges
+
+        e.preventDefault();
+        if (timelineScrolling) return;
+
+        timelineIndex = clamp(timelineIndex + (dir > 0 ? 1 : -1), 0, timelineStops.length - 1);
+        scrollToTimelineStop(timelineIndex);
+    };
+
+    section.addEventListener('wheel', onWheel, { passive: false });
+}
+
+function scrollToTimelineStop(idx) {
+    const stop = timelineStops[idx];
+    if (!stop) return;
+    timelineScrolling = true;
+    const era = stop.getAttribute('data-era');
+    stop.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    if (era) setTimelineEra(era);
+    setTimeout(() => {
+        timelineScrolling = false;
+    }, 650);
+}
+
+function isSectionInView(el) {
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return rect.top < vh * 0.65 && rect.bottom > vh * 0.2;
+}
+
+function clamp(n, min, max) {
+    return Math.min(max, Math.max(min, n));
+}
+
+function bindHistoryParallax() {
+    const section = document.querySelector('.history-section');
+    if (!section) return;
+    const update = () => {
+        if (!timelineParallaxEnabled) {
+            section.style.setProperty('--history-parallax', '0px');
+            return;
+        }
+        const rect = section.getBoundingClientRect();
+        const offset = rect.top * -0.15;
+        section.style.setProperty('--history-parallax', `${offset}px`);
+    };
+    update();
+    window.addEventListener('scroll', update);
 }
 
 function updateTriforceHero(id) {
@@ -556,6 +658,34 @@ function updateTriforceHero(id) {
     const c = characters[id];
     portrait.src = c.full;
     portrait.alt = c.name;
+}
+
+function initCrushOverlay() {
+    crushOverlay = document.getElementById('crush-overlay');
+}
+
+function triggerCrushEasterEgg() {
+    if (!crushOverlay) return;
+    crushOverlay.classList.add('show');
+    crushOverlay.setAttribute('aria-hidden', 'false');
+    spawnCrushHearts(12);
+    setTimeout(() => {
+        crushOverlay?.classList.remove('show');
+        crushOverlay?.setAttribute('aria-hidden', 'true');
+    }, 5200);
+}
+
+function spawnCrushHearts(count = 10) {
+    if (!crushOverlay) return;
+    for (let i = 0; i < count; i++) {
+        const heart = document.createElement('span');
+        heart.className = 'crush-heart';
+        heart.style.left = `${10 + Math.random() * 80}%`;
+        heart.style.animationDelay = `${Math.random() * 0.6}s`;
+        heart.style.setProperty('--drift', `${(Math.random() - 0.5) * 40}px`);
+        crushOverlay.appendChild(heart);
+        setTimeout(() => heart.remove(), 5200);
+    }
 }
 
 // --- VIDEO MODAL ---
@@ -626,7 +756,7 @@ async function sendChat() {
     box.appendChild(loading);
 
     const brevity = 'Keep replies short (2-3 sentences max), conversational, and avoid long monologues.';
-    const prompt = c ? `${c.prompt} ${brevity}` : brevity;
+    const prompt = c ? `${c.prompt} ${brevity} ${secretEasterEgg}` : `${brevity} ${secretEasterEgg}`;
     const reply = await callGemini(userTxt, prompt);
 
     box.removeChild(loading);
