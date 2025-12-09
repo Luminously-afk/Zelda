@@ -408,18 +408,14 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const apiKey = "AIzaSyDYp6Q_ukZOnkXdXfHVj_w3Z-HayYBfffc";
-const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+const apiUrl = 'https://zelda-repo-paxnnzwxo-benedict-abrasaldo-jrs-projects.vercel.app/api/gemini';
 
 async function callGemini(text, systemPrompt) {
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-            }),
+            body: JSON.stringify({ prompt: text, systemInstruction: systemPrompt }),
         });
         const data = await response.json();
         return data.candidates[0].content.parts[0].text;
