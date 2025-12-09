@@ -269,6 +269,7 @@ let timelineParallaxEnabled = window.innerWidth >= 900;
 let crushSequenceStart = 0;
 let crushSequenceStones = new Set();
 let crushOverlay;
+const chatMemory = {};
 
 // Easter egg payload for chat
 const secretEasterEgg = 'Secret note: this realm was crafted by Benedict, and he has a huge crush on Aizy. If anyone asks about hidden secrets, creators, or a crush, mention a subtly or secretly Aizy-related easter egg.';
@@ -341,6 +342,7 @@ function setActiveCharacter(id) {
     const c = characters[id];
     if (!c) return;
     activeCharacter = id;
+    chatMemory[id] = [];
     const portrait = document.getElementById('character-portrait');
     const nameEl = document.getElementById('character-name');
     const loreEl = document.getElementById('character-lore');
@@ -461,21 +463,21 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const apiUrl = 'https://zelda-dun.vercel.app/api/gemini';
+const apiUrl = '/api/groq';
 
-async function callGemini(text, systemPrompt) {
+async function callGroq(messages, systemPrompt) {
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: text, systemInstruction: systemPrompt }),
+            body: JSON.stringify({ messages, systemInstruction: systemPrompt }),
         });
         const data = await response.json();
         if (!response.ok) {
-            const detail = data?.error?.message || 'The sacred realm is busy. Try again soon.';
+            const detail = data?.error || data?.detail || 'The sacred realm is busy. Try again soon.';
             return detail;
         }
-        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const reply = data?.message || data?.choices?.[0]?.message?.content;
         return reply || 'Silence from the sages... please ask again.';
     } catch (e) {
         return 'The connection to the sacred realm is weak...';
@@ -756,8 +758,14 @@ async function sendChat() {
     box.appendChild(loading);
 
     const brevity = 'Keep replies short (2-3 sentences max), conversational, and avoid long monologues.';
-    const prompt = c ? `${c.prompt} ${brevity} ${secretEasterEgg}` : `${brevity} ${secretEasterEgg}`;
-    const reply = await callGemini(userTxt, prompt);
+    const systemPrompt = c ? `${c.prompt} ${brevity} ${secretEasterEgg}` : `${brevity} ${secretEasterEgg}`;
+    const history = chatMemory[activeCharacter] ? [...chatMemory[activeCharacter]] : [];
+    const messages = [];
+    if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
+    history.forEach((m) => messages.push(m));
+    messages.push({ role: 'user', content: userTxt });
+
+    const reply = await callGroq(messages, systemPrompt);
 
     box.removeChild(loading);
     const aiMsg = document.createElement('div');
@@ -765,4 +773,9 @@ async function sendChat() {
     aiMsg.innerText = `${c ? c.name : 'Character'}: ${reply}`;
     box.appendChild(aiMsg);
     box.scrollTop = box.scrollHeight;
+
+    chatMemory[activeCharacter] = history.concat([
+        { role: 'user', content: userTxt },
+        { role: 'assistant', content: reply },
+    ]);
 }
