@@ -408,7 +408,7 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const apiUrl = 'https://zelda-repo-paxnnzwxo-benedict-abrasaldo-jrs-projects.vercel.app/api/gemini';
+const apiUrl = 'https://zelda-dun.vercel.app/api/gemini';
 
 async function callGemini(text, systemPrompt) {
     try {
