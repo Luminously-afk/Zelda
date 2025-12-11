@@ -368,6 +368,9 @@ const SHAKE_CONFIRM_WINDOW = 800; // second spike must land within this window
 let badingOverlay;
 let lastBadingTime = 0;
 const BADING_COOLDOWN = 8000;
+let benedictOverlay;
+let lastBenedictTime = 0;
+const BENEDICT_COOLDOWN = 8000;
 const chatMemory = {};
 let swordKeyBuffer = '';
 
@@ -598,6 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initShakeOverlay();
     initShakeEasterEgg();
     initBadingOverlay();
+    initBenedictOverlay();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -616,6 +620,9 @@ document.addEventListener('keydown', (e) => {
     } else if (swordKeyBuffer.includes('bading')) {
         swordKeyBuffer = '';
         triggerBadingEasterEgg();
+    } else if (swordKeyBuffer.includes('benedict')) {
+        swordKeyBuffer = '';
+        triggerBenedictEasterEgg();
     }
 });
 
@@ -907,6 +914,40 @@ function triggerBadingEasterEgg() {
     badingOverlay.style.pointerEvents = 'auto';
     console.log('Bading Easter Egg Triggered');
     setTimeout(hideBadingEasterEgg, 6500);
+}
+
+function initBenedictOverlay() {
+    benedictOverlay = document.getElementById('benedict-overlay');
+    const close = document.getElementById('benedict-close');
+    if (close) close.addEventListener('click', hideBenedictEasterEgg);
+    window.triggerBenedictEasterEgg = triggerBenedictEasterEgg;
+}
+
+function triggerBenedictEasterEgg() {
+    if (!benedictOverlay) initBenedictOverlay();
+    if (!benedictOverlay) return;
+    const now = Date.now();
+    if (now - lastBenedictTime < BENEDICT_COOLDOWN) return;
+    lastBenedictTime = now;
+    benedictOverlay.classList.add('show');
+    benedictOverlay.setAttribute('aria-hidden', 'false');
+    benedictOverlay.style.opacity = '1';
+    benedictOverlay.style.pointerEvents = 'auto';
+    const sketch = benedictOverlay.querySelector('.benedict-drawing');
+    if (sketch) {
+        sketch.classList.remove('draw-start');
+        void sketch.offsetWidth; // restart animation
+        sketch.classList.add('draw-start');
+    }
+    setTimeout(hideBenedictEasterEgg, 7000);
+}
+
+function hideBenedictEasterEgg() {
+    if (!benedictOverlay) return;
+    benedictOverlay.classList.remove('show');
+    benedictOverlay.setAttribute('aria-hidden', 'true');
+    benedictOverlay.style.opacity = '';
+    benedictOverlay.style.pointerEvents = '';
 }
 
 function hideBadingEasterEgg() {
