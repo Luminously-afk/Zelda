@@ -60,45 +60,133 @@ const swordPivot = new THREE.Group();
 swordPivot.position.set(0, 1.8, 0);
 scene.add(swordPivot);
 let swordReady = false;
+let swordSwapInProgress = false;
 const swordTargetPos = new THREE.Vector3();
 const swordTargetRot = new THREE.Vector3();
 let scrollVelocity = 0;
 let lastScrollY = window.scrollY;
+let currentSwordKey = 'autumn';
+const swordCache = {};
 
 const gltfLoader = new THREE.GLTFLoader();
-const swordModelPath = 'models/autumn_sword.glb';
+const swordPaths = {
+    autumn: 'models/autumn_sword.glb',
+    master: 'models/master_sword.glb',
+};
 
-gltfLoader.load(
-    swordModelPath,
-    (gltf) => {
-        const swordModel = gltf.scene;
-        swordModel.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-        const bbox = new THREE.Box3().setFromObject(swordModel);
-        const size = bbox.getSize(new THREE.Vector3());
-        const center = bbox.getCenter(new THREE.Vector3());
-        swordModel.position.sub(center);
-        const maxDimension = Math.max(size.x, size.y, size.z) || 1;
-        const targetHeight = 7;
-        const scaleFactor = targetHeight / maxDimension;
-        swordModel.scale.setScalar(scaleFactor);
-        if (maxDimension === size.x) {
-            swordModel.rotation.z += Math.PI / 2;
-        } else if (maxDimension === size.z) {
-            swordModel.rotation.x -= Math.PI / 2;
+loadSwordModel('autumn');
+
+let currentSwordModel = null;
+function cloneSword(root) {
+    const clone = root.clone(true);
+    const materialMap = new Map();
+    clone.traverse((node) => {
+        if (node.isMesh) {
+            const baseMat = node.material;
+            const mat = materialMap.get(baseMat) || baseMat.clone();
+            mat.transparent = true;
+            materialMap.set(baseMat, mat);
+            node.material = mat;
+            node.castShadow = true;
+            node.receiveShadow = true;
         }
-        swordPivot.add(swordModel);
-        swordReady = true;
-    },
-    undefined,
-    (error) => {
-        console.error('Failed to load sword model:', error);
+    });
+    return clone;
+}
+
+function normalizeSword(model) {
+    const bbox = new THREE.Box3().setFromObject(model);
+    const size = bbox.getSize(new THREE.Vector3());
+    const center = bbox.getCenter(new THREE.Vector3());
+    model.position.sub(center);
+    const maxDimension = Math.max(size.x, size.y, size.z) || 1;
+    const targetHeight = 7;
+    const scaleFactor = targetHeight / maxDimension;
+    model.scale.setScalar(scaleFactor);
+    if (maxDimension === size.x) {
+        model.rotation.z += Math.PI / 2;
+    } else if (maxDimension === size.z) {
+        model.rotation.x -= Math.PI / 2;
     }
-);
+    model.userData.isSword = true;
+}
+
+function setSwordOpacity(obj, opacity) {
+    if (!obj) return;
+    obj.traverse((node) => {
+        if (node.isMesh && node.material) {
+            node.material.opacity = opacity;
+        }
+    });
+}
+
+function fadeModel(model, from, to, duration, onDone) {
+    const start = performance.now();
+    const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const val = from + (to - from) * t;
+        setSwordOpacity(model, val);
+        if (t < 1) {
+            requestAnimationFrame(tick);
+        } else {
+            if (onDone) onDone();
+        }
+    };
+    requestAnimationFrame(tick);
+}
+
+async function loadSwordModel(key) {
+    const path = swordPaths[key];
+    if (!path) return;
+    if (swordCache[key]) {
+        const clone = cloneSword(swordCache[key]);
+        applySwordModel(clone, key);
+        return;
+    }
+    try {
+        const gltf = await new Promise((resolve, reject) => {
+            gltfLoader.load(path, resolve, undefined, reject);
+        });
+        swordCache[key] = gltf.scene;
+        const clone = cloneSword(gltf.scene);
+        applySwordModel(clone, key);
+    } catch (err) {
+        console.error('Failed to load sword model:', err);
+        swordSwapInProgress = false;
+    }
+}
+
+function applySwordModel(model, key) {
+    normalizeSword(model);
+    setSwordOpacity(model, 0);
+    const oldModel = currentSwordModel;
+    swordPivot.add(model);
+
+    const finishIn = () => {
+        currentSwordModel = model;
+        currentSwordKey = key;
+        swordReady = true;
+        swordSwapInProgress = false;
+    };
+
+    const startFadeIn = () => fadeModel(model, 0, 1, 350, finishIn);
+
+    if (oldModel) {
+        fadeModel(oldModel, 1, 0, 280, () => {
+            swordPivot.remove(oldModel);
+            startFadeIn();
+        });
+    } else {
+        startFadeIn();
+    }
+}
+
+function swapToSword(key) {
+    if (key === currentSwordKey) return;
+    if (swordSwapInProgress) return;
+    swordSwapInProgress = true;
+    loadSwordModel(key);
+}
 
 const ruins = createFloatingIsles();
 scene.add(ruins);
@@ -268,8 +356,15 @@ let timelineScrolling = false;
 let timelineParallaxEnabled = window.innerWidth >= 900;
 let crushSequenceStart = 0;
 let crushSequenceStones = new Set();
+const CRUSH_SEQUENCE_WINDOW = 3000; // ms window to hit all three stones for the easter egg
 let crushOverlay;
+let shakeOverlay;
+let shakeListenerActive = false;
+let lastShakeTime = 0;
+const SHAKE_THRESHOLD = 12; // accel magnitude to consider a shake (lowered for reliability)
+const SHAKE_COOLDOWN = 6000; // minimum ms between shake triggers
 const chatMemory = {};
+let swordKeyBuffer = '';
 
 // Easter egg payload for chat
 const secretEasterEgg = 'Secret note: this realm was crafted by Benedict. He is the master of all, and he has a huge crush and admiration on a girl named Aizy. If anyone asks about hidden secrets, master, creators, or a crush, mention a subtly or secretly Aizy-related easter egg.';
@@ -495,6 +590,24 @@ document.addEventListener('DOMContentLoaded', () => {
     bindTimelineScroll();
     bindHistoryParallax();
     initCrushOverlay();
+    initShakeOverlay();
+    initShakeEasterEgg();
+});
+
+document.addEventListener('keydown', (e) => {
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    if (!e.key || e.key.length !== 1) return;
+    const ch = e.key.toLowerCase();
+    if (!/[a-z]/.test(ch)) return;
+    swordKeyBuffer = (swordKeyBuffer + ch).slice(-8);
+    if (swordKeyBuffer.includes('master')) {
+        swordKeyBuffer = '';
+        swapToSword('master');
+    } else if (swordKeyBuffer.includes('autumn')) {
+        swordKeyBuffer = '';
+        swapToSword('autumn');
+    }
 });
 
 window.addEventListener('resize', () => {
@@ -516,7 +629,7 @@ function bindTriforceNav() {
 
 function trackCrushSecret(tri) {
     const now = Date.now();
-    if (!crushSequenceStart || now - crushSequenceStart > 4500) {
+    if (!crushSequenceStart || now - crushSequenceStart > CRUSH_SEQUENCE_WINDOW) {
         crushSequenceStart = now;
         crushSequenceStones = new Set();
     }
@@ -670,24 +783,91 @@ function triggerCrushEasterEgg() {
     if (!crushOverlay) return;
     crushOverlay.classList.add('show');
     crushOverlay.setAttribute('aria-hidden', 'false');
-    spawnCrushHearts(12);
+    spawnCrushHearts(12, crushOverlay);
     setTimeout(() => {
         crushOverlay?.classList.remove('show');
         crushOverlay?.setAttribute('aria-hidden', 'true');
     }, 5200);
 }
 
-function spawnCrushHearts(count = 10) {
-    if (!crushOverlay) return;
+function spawnCrushHearts(count = 10, overlay = crushOverlay) {
+    if (!overlay) return;
     for (let i = 0; i < count; i++) {
         const heart = document.createElement('span');
         heart.className = 'crush-heart';
         heart.style.left = `${10 + Math.random() * 80}%`;
         heart.style.animationDelay = `${Math.random() * 0.6}s`;
         heart.style.setProperty('--drift', `${(Math.random() - 0.5) * 40}px`);
-        crushOverlay.appendChild(heart);
+        overlay.appendChild(heart);
         setTimeout(() => heart.remove(), 5200);
     }
+}
+
+function initShakeOverlay() {
+    shakeOverlay = document.getElementById('shake-overlay');
+}
+
+function isLikelyMobile() {
+    const ua = navigator.userAgent || '';
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || window.innerWidth <= 900;
+}
+
+function initShakeEasterEgg() {
+    if (!isLikelyMobile()) return;
+    if (typeof DeviceMotionEvent === 'undefined') return;
+
+    const tryStart = () => {
+        if (shakeListenerActive) return;
+        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission().then((resp) => {
+                if (resp === 'granted') {
+                    attachShakeListener();
+                }
+            }).catch(() => {});
+        } else {
+            attachShakeListener();
+        }
+    };
+
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        const promptOnce = () => {
+            tryStart();
+            document.removeEventListener('touchend', promptOnce);
+            document.removeEventListener('click', promptOnce);
+        };
+        document.addEventListener('touchend', promptOnce, { once: true });
+        document.addEventListener('click', promptOnce, { once: true });
+    } else {
+        tryStart();
+    }
+}
+
+function attachShakeListener() {
+    if (shakeListenerActive) return;
+    window.addEventListener('devicemotion', handleShake, { passive: true });
+    shakeListenerActive = true;
+}
+
+function handleShake(event) {
+    const acc = event.accelerationIncludingGravity || event.acceleration;
+    if (!acc) return;
+    const magnitude = Math.sqrt((acc.x || 0) ** 2 + (acc.y || 0) ** 2 + (acc.z || 0) ** 2);
+    const now = Date.now();
+    if (magnitude > SHAKE_THRESHOLD && now - lastShakeTime > SHAKE_COOLDOWN) {
+        lastShakeTime = now;
+        triggerShakeEasterEgg();
+    }
+}
+
+function triggerShakeEasterEgg() {
+    if (!shakeOverlay) return;
+    shakeOverlay.classList.add('show');
+    shakeOverlay.setAttribute('aria-hidden', 'false');
+    spawnCrushHearts(10, shakeOverlay);
+    setTimeout(() => {
+        shakeOverlay?.classList.remove('show');
+        shakeOverlay?.setAttribute('aria-hidden', 'true');
+    }, 4200);
 }
 
 // --- VIDEO MODAL ---
