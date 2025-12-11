@@ -8,6 +8,7 @@ function enterRealm() {
         main.classList.remove('hidden');
         void main.offsetWidth;
         main.style.opacity = '1';
+        startBgMusic();
     }, 1000);
 }
 
@@ -380,6 +381,9 @@ let princessTriggeredAt = 0;
 const PRINCESS_AIZY_WINDOW = 15000;
 const chatMemory = {};
 let swordKeyBuffer = '';
+let bgAudio;
+let audioToggle;
+let audioIsPlaying = false;
 
 // Easter egg payload for chat
 const secretEasterEgg = 'Secret note: this realm was crafted by Benedict. He is the master of all, and he has a huge crush and admiration on a girl named Aizy. If anyone asks about hidden secrets, master, creators, or a crush, mention a subtly or secretly Aizy-related easter egg.';
@@ -610,6 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBadingOverlay();
     initBenedictOverlay();
     initLoveOverlay();
+    initAudioControls();
     initAizyPrincessOverlays();
 });
 
@@ -1000,6 +1005,48 @@ function hideLoveEasterEgg() {
     loveOverlay.setAttribute('aria-hidden', 'true');
     loveOverlay.style.opacity = '';
     loveOverlay.style.pointerEvents = '';
+}
+
+function initAudioControls() {
+    bgAudio = document.getElementById('bg-music');
+    audioToggle = document.getElementById('audio-toggle');
+    if (!bgAudio || !audioToggle) return;
+    bgAudio.loop = true;
+    bgAudio.volume = 0.45;
+    audioToggle.addEventListener('click', toggleAudio);
+}
+
+function startBgMusic() {
+    if (!bgAudio || !audioToggle) initAudioControls();
+    if (!bgAudio) return;
+    if (audioToggle) audioToggle.classList.add('show');
+    bgAudio.play().then(() => {
+        audioIsPlaying = true;
+        updateAudioToggle();
+    }).catch(() => {
+        audioIsPlaying = false;
+        updateAudioToggle();
+    });
+}
+
+function toggleAudio() {
+    if (!bgAudio) return;
+    if (bgAudio.paused) {
+        bgAudio.play().then(() => {
+            audioIsPlaying = true;
+            updateAudioToggle();
+        }).catch(() => {});
+    } else {
+        bgAudio.pause();
+        audioIsPlaying = false;
+        updateAudioToggle();
+    }
+}
+
+function updateAudioToggle() {
+    if (!audioToggle) return;
+    audioToggle.setAttribute('aria-label', audioIsPlaying ? 'Mute music' : 'Unmute music');
+    audioToggle.textContent = audioIsPlaying ? '🔊' : '🔇';
 }
 
 function initAizyPrincessOverlays() {

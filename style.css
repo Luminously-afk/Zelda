@@ -1413,6 +1413,38 @@ h1, h2, h3, .fantasy-font {
     transform: scale(1.05);
 }
 
+.audio-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 2px solid rgba(74, 222, 128, 0.65);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fef9c3;
+    font-size: 22px;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.55), 0 0 18px rgba(74, 222, 128, 0.35);
+    cursor: var(--zelda-cursor);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    z-index: 95;
+}
+
+.audio-fab.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.audio-fab:hover {
+    transform: translateY(-3px) scale(1.04);
+    background: rgba(6, 95, 70, 0.65);
+    border-color: rgba(251, 191, 36, 0.55);
+}
+
     @keyframes float-heart {
         0% { transform: translate3d(0, 0, 0) scale(0.8) rotate(45deg); opacity: 0; }
         20% { opacity: 0.95; }
