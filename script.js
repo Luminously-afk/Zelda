@@ -371,6 +371,10 @@ const BADING_COOLDOWN = 8000;
 let benedictOverlay;
 let lastBenedictTime = 0;
 const BENEDICT_COOLDOWN = 8000;
+let aizyOverlay;
+let princessOverlay;
+let princessTriggeredAt = 0;
+const PRINCESS_AIZY_WINDOW = 15000;
 const chatMemory = {};
 let swordKeyBuffer = '';
 
@@ -602,6 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initShakeEasterEgg();
     initBadingOverlay();
     initBenedictOverlay();
+    initAizyPrincessOverlays();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -623,6 +628,12 @@ document.addEventListener('keydown', (e) => {
     } else if (swordKeyBuffer.includes('benedict')) {
         swordKeyBuffer = '';
         triggerBenedictEasterEgg();
+    } else if (swordKeyBuffer.includes('aizy')) {
+        swordKeyBuffer = '';
+        triggerAizyEasterEgg();
+    } else if (swordKeyBuffer.includes('princess')) {
+        swordKeyBuffer = '';
+        triggerPrincessEasterEgg();
     }
 });
 
@@ -949,6 +960,64 @@ function hideBenedictEasterEgg() {
     benedictOverlay.style.opacity = '';
     benedictOverlay.style.pointerEvents = '';
 }
+
+function initAizyPrincessOverlays() {
+    aizyOverlay = document.getElementById('aizy-overlay');
+    princessOverlay = document.getElementById('princess-overlay');
+    const aizyClose = document.getElementById('aizy-close');
+    const princessClose = document.getElementById('princess-close');
+    if (aizyClose) aizyClose.addEventListener('click', hideAizyEasterEgg);
+    if (princessClose) princessClose.addEventListener('click', hidePrincessEasterEgg);
+    window.triggerAizyEasterEgg = triggerAizyEasterEgg;
+    window.triggerPrincessEasterEgg = triggerPrincessEasterEgg;
+}
+
+function showOverlay(el) {
+    if (!el) return;
+    el.classList.add('show');
+    el.setAttribute('aria-hidden', 'false');
+    el.style.opacity = '1';
+    el.style.pointerEvents = 'auto';
+}
+
+function hideOverlay(el) {
+    if (!el) return;
+    el.classList.remove('show');
+    el.setAttribute('aria-hidden', 'true');
+    el.style.opacity = '';
+    el.style.pointerEvents = '';
+}
+
+function triggerAizyEasterEgg() {
+    if (!aizyOverlay) initAizyPrincessOverlays();
+    if (!aizyOverlay) return;
+    const now = Date.now();
+    const titleEl = document.getElementById('aizy-title');
+    const subEl = document.getElementById('aizy-sub');
+    const valid = princessTriggeredAt && (now - princessTriggeredAt <= PRINCESS_AIZY_WINDOW);
+    if (valid) {
+        if (titleEl) titleEl.textContent = 'yea u got me. i like her~';
+        if (subEl) subEl.textContent = '';
+        princessTriggeredAt = 0;
+    } else {
+        if (titleEl) titleEl.textContent = 'uhh is this about my crush again?';
+        if (subEl) subEl.textContent = 'is that really her name? try completing it first~';
+    }
+    showOverlay(aizyOverlay);
+    setTimeout(hideAizyEasterEgg, 5500);
+}
+
+function hideAizyEasterEgg() { hideOverlay(aizyOverlay); }
+
+function triggerPrincessEasterEgg() {
+    if (!princessOverlay) initAizyPrincessOverlays();
+    if (!princessOverlay) return;
+    princessTriggeredAt = Date.now();
+    showOverlay(princessOverlay);
+    setTimeout(hidePrincessEasterEgg, 5500);
+}
+
+function hidePrincessEasterEgg() { hideOverlay(princessOverlay); }
 
 function hideBadingEasterEgg() {
     if (!badingOverlay) return;
