@@ -361,8 +361,13 @@ let crushOverlay;
 let shakeOverlay;
 let shakeListenerActive = false;
 let lastShakeTime = 0;
-const SHAKE_THRESHOLD = 12; // accel magnitude to consider a shake (lowered for reliability)
-const SHAKE_COOLDOWN = 6000; // minimum ms between shake triggers
+let pendingShakeTime = 0;
+const SHAKE_THRESHOLD = 16; // accel magnitude to consider a shake
+const SHAKE_COOLDOWN = 7000; // minimum ms between shake triggers
+const SHAKE_CONFIRM_WINDOW = 800; // second spike must land within this window
+let badingOverlay;
+let lastBadingTime = 0;
+const BADING_COOLDOWN = 8000;
 const chatMemory = {};
 let swordKeyBuffer = '';
 
@@ -592,6 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCrushOverlay();
     initShakeOverlay();
     initShakeEasterEgg();
+    initBadingOverlay();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -600,13 +606,16 @@ document.addEventListener('keydown', (e) => {
     if (!e.key || e.key.length !== 1) return;
     const ch = e.key.toLowerCase();
     if (!/[a-z]/.test(ch)) return;
-    swordKeyBuffer = (swordKeyBuffer + ch).slice(-8);
+    swordKeyBuffer = (swordKeyBuffer + ch).slice(-12);
     if (swordKeyBuffer.includes('master')) {
         swordKeyBuffer = '';
         swapToSword('master');
     } else if (swordKeyBuffer.includes('autumn')) {
         swordKeyBuffer = '';
         swapToSword('autumn');
+    } else if (swordKeyBuffer.includes('bading')) {
+        swordKeyBuffer = '';
+        triggerBadingEasterEgg();
     }
 });
 
@@ -853,9 +862,16 @@ function handleShake(event) {
     if (!acc) return;
     const magnitude = Math.sqrt((acc.x || 0) ** 2 + (acc.y || 0) ** 2 + (acc.z || 0) ** 2);
     const now = Date.now();
-    if (magnitude > SHAKE_THRESHOLD && now - lastShakeTime > SHAKE_COOLDOWN) {
-        lastShakeTime = now;
-        triggerShakeEasterEgg();
+    if (magnitude < SHAKE_THRESHOLD) return;
+
+    if (pendingShakeTime && now - pendingShakeTime <= SHAKE_CONFIRM_WINDOW) {
+        if (now - lastShakeTime > SHAKE_COOLDOWN) {
+            lastShakeTime = now;
+            pendingShakeTime = 0;
+            triggerShakeEasterEgg();
+        }
+    } else {
+        pendingShakeTime = now;
     }
 }
 
@@ -868,6 +884,37 @@ function triggerShakeEasterEgg() {
         shakeOverlay?.classList.remove('show');
         shakeOverlay?.setAttribute('aria-hidden', 'true');
     }, 4200);
+}
+
+function initBadingOverlay() {
+    badingOverlay = document.getElementById('bading-overlay');
+    const close = document.getElementById('bading-close');
+    if (close) close.addEventListener('click', hideBadingEasterEgg);
+    // Expose manual trigger for debugging
+    window.triggerBadingEasterEgg = triggerBadingEasterEgg;
+}
+
+function triggerBadingEasterEgg() {
+    if (!badingOverlay) initBadingOverlay();
+    if (!badingOverlay) return;
+    const now = Date.now();
+    if (now - lastBadingTime < BADING_COOLDOWN) return;
+    console.log('Bading Easter Egg Triggered');
+    lastBadingTime = now;
+    badingOverlay.classList.add('show');
+    badingOverlay.setAttribute('aria-hidden', 'false');
+    badingOverlay.style.opacity = '1';
+    badingOverlay.style.pointerEvents = 'auto';
+    console.log('Bading Easter Egg Triggered');
+    setTimeout(hideBadingEasterEgg, 6500);
+}
+
+function hideBadingEasterEgg() {
+    if (!badingOverlay) return;
+    badingOverlay.classList.remove('show');
+    badingOverlay.setAttribute('aria-hidden', 'true');
+    badingOverlay.style.opacity = '';
+    badingOverlay.style.pointerEvents = '';
 }
 
 // --- VIDEO MODAL ---

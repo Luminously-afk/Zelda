@@ -6,6 +6,7 @@ body {
     font-family: 'Lato', sans-serif;
 }
 
+
 h1, h2, h3, .fantasy-font {
     font-family: 'Cinzel Decorative', serif;
 }
@@ -720,6 +721,106 @@ h1, h2, h3, .fantasy-font {
         top: 0;
         left: -8px;
     }
+
+/* Bading secret overlay */
+.secret-overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 80;
+    background: radial-gradient(circle at 50% 50%, rgba(6, 78, 59, 0.55), rgba(4, 26, 30, 0.92));
+    backdrop-filter: blur(4px);
+    overflow: hidden;
+}
+
+.secret-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.secret-glow {
+    position: absolute;
+    inset: -25%;
+    background: conic-gradient(from 120deg, rgba(52, 211, 153, 0.18), rgba(94, 234, 212, 0.08), rgba(52, 211, 153, 0.2));
+    filter: blur(110px);
+    opacity: 0.9;
+    animation: swirl 12s linear infinite;
+}
+
+.secret-card {
+    position: relative;
+    max-width: 640px;
+    width: 92%;
+    padding: 28px 30px 24px;
+    background: linear-gradient(135deg, rgba(9, 53, 45, 0.95), rgba(6, 95, 70, 0.9));
+    border: 1px solid rgba(52, 211, 153, 0.55);
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.55), 0 0 30px rgba(52, 211, 153, 0.35);
+    border-radius: 18px;
+    color: #e2fbe8;
+    text-align: center;
+    overflow: hidden;
+}
+
+.secret-card::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px dashed rgba(94, 234, 212, 0.35);
+    border-radius: 14px;
+    pointer-events: none;
+}
+
+.secret-label {
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    font-size: 11px;
+    color: #99f6e4;
+    margin-bottom: 10px;
+}
+
+.secret-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 20px;
+    margin: 0 0 12px;
+    color: #fef3c7;
+    text-shadow: 0 0 12px rgba(255, 243, 199, 0.35);
+}
+
+.secret-sub {
+    margin: 6px 0;
+    color: #d1fae5;
+    font-size: 14px;
+}
+
+.secret-sub.punchline {
+    color: #f9a8d4;
+    font-weight: 600;
+}
+
+.secret-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(94, 234, 212, 0.4);
+    color: #e2fbe8;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.secret-close:hover {
+    background: rgba(94, 234, 212, 0.18);
+    transform: scale(1.05);
+}
 
     @keyframes float-heart {
         0% { transform: translate3d(0, 0, 0) scale(0.8) rotate(45deg); opacity: 0; }
