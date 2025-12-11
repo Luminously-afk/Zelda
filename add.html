@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legend of Zelda - Expanded Sections</title>
+    <!-- Importing Cinzel for headers (Regal look) and Lato for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --zelda-deep-bg: #020a08;     /* Very dark almost black green */
+            --zelda-section-bg: #0d2b25;  /* The main green from your site */
+            --zelda-gold: #d4b466;        /* Bright gold */
+            --zelda-gold-dark: #9e8548;   /* Darker antique gold */
+            --zelda-text-light: #e0eadd;  /* Off-white */
+            --malice-red: #c92a2a;        /* For enemies */
+            --sheikah-blue: #00d2ff;      /* Accent glow */
+        }
+
+        body {
+            background-color: var(--zelda-deep-bg);
+            color: var(--zelda-text-light);
+            font-family: 'Lato', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .expansion-container {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* --- SHARED HEADERS --- */
+        .expansion-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .expansion-header h2 {
+            color: var(--zelda-gold);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+            display: inline-block;
+            position: relative;
+        }
+
+        /* The decorative triforce-style underline */
+        .expansion-header h2::after {
+            content: '▲';
+            display: block;
+            color: var(--zelda-gold-dark);
+            font-size: 12px;
+            margin-top: 10px;
+            text-shadow: -15px 0 0 var(--zelda-gold-dark), 15px 0 0 var(--zelda-gold-dark);
+        }
+
+        .expansion-subtext {
+            font-style: italic;
+            opacity: 0.7;
+            max-width: 600px;
+            margin: 15px auto 0;
+            font-size: 1rem;
+            border-top: 1px solid rgba(212, 180, 102, 0.3);
+            padding-top: 15px;
+        }
+
+        /* =========================================
+           SECTION 1: ARSENAL OF LEGENDS
+           ========================================= */
+        .arsenal-section {
+            padding: 80px 20px;
+            background: radial-gradient(circle at center, #133a32 0%, var(--zelda-deep-bg) 80%);
+        }
+
+        .arsenal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .relic-card {
+            background: rgba(13, 43, 37, 0.4);
+            border: 1px solid var(--zelda-gold-dark);
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .relic-card:hover {
+            transform: translateY(-10px);
+            background: rgba(13, 43, 37, 0.7);
+            box-shadow: 0 0 25px rgba(212, 180, 102, 0.2);
+            border-color: var(--zelda-gold);
+        }
+
+        /* Corner accents for the cards */
+        .relic-card::before, .relic-card::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 1px solid var(--zelda-gold);
+            transition: all 0.3s ease;
+        }
+        .relic-card::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+        .relic-card::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
+
+        .relic-img-container {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        /* Golden glow behind items */
+        .relic-img-container::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, var(--zelda-gold) 0%, transparent 70%);
+            opacity: 0.15;
+            z-index: 0;
+            transition: opacity 0.3s;
+        }
+        .relic-card:hover .relic-img-container::after { opacity: 0.3; }
+
+        .relic-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            z-index: 1;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+        }
+
+        .relic-card h3 {
+            color: var(--zelda-gold);
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .relic-tagline {
+            display: block;
+            font-size: 0.85rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .relic-desc {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* =========================================
+           SECTION 2: TRIBES OF HYRULE
+           ========================================= */
+        .peoples-section {
+            background-color: var(--zelda-section-bg);
+            padding: 80px 20px;
+            border-top: 2px solid var(--zelda-gold-dark);
+            border-bottom: 2px solid var(--zelda-gold-dark);
+            /* Pattern overlay simulation */
+            background-image: linear-gradient(rgba(13, 43, 37, 0.9), rgba(13, 43, 37, 0.9)), 
+                              repeating-linear-gradient(45deg, #0a221d 0, #0a221d 10px, #0d2b25 10px, #0d2b25 20px);
+        }
+
+        .tribes-flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .tribe-card {
+            flex: 1 1 220px;
+            max-width: 280px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .tribe-medallion {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            border: 3px solid var(--zelda-gold);
+            padding: 5px; /* Gap between image and border */
+            position: relative;
+            background: transparent;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tribe-medallion img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.5);
+            filter: sepia(30%) contrast(110%); /* Slight "old photo" feel */
+            transition: filter 0.3s;
+        }
+
+        .tribe-card:hover .tribe-medallion {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(212, 180, 102, 0.3);
+            background: rgba(212, 180, 102, 0.1);
+        }
+        
+        .tribe-card:hover .tribe-medallion img {
+            filter: sepia(0%) contrast(100%);
+        }
+
+        .tribe-card h3 {
+            color: #fff;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+
+        .tribe-home {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--zelda-gold);
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .tribe-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           SECTION 3: BESTIARY (DARK)
+           ========================================= */
+        .bestiary-section {
+            padding: 100px 20px;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Malice Particle Effect Simulation (Simple CSS blobs) */
+        .bestiary-bg-effect {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(163, 40, 40, 0.15), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(163, 40, 40, 0.1), transparent 30%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bestiary-section .expansion-header h2 {
+            color: #ff4d4d; /* Redder title for enemies */
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+        }
+        
+        .bestiary-section .expansion-header h2::after {
+            color: #ff4d4d;
+            content: '▼'; /* Inverted triangle for "bad" guys */
+            text-shadow: -15px 0 0 #5c0000, 15px 0 0 #5c0000;
+        }
+
+        .enemy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .enemy-card {
+            background: #0f0505;
+            border: 1px solid #3d1212;
+            transition: 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .enemy-card:hover {
+             border-color: var(--malice-red);
+             box-shadow: 0 0 20px rgba(201, 42, 42, 0.4);
+             transform: translateY(-5px);
+        }
+
+        .enemy-frame {
+            height: 200px;
+            overflow: hidden;
+            border-bottom: 2px solid var(--malice-red);
+            position: relative;
+        }
+
+        .enemy-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 3s ease; /* Slow zoom effect */
+        }
+
+        .enemy-card:hover .enemy-frame img {
+            transform: scale(1.15);
+        }
+
+        .enemy-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .enemy-info h3 {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .enemy-role {
+            color: var(--malice-red);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .enemy-desc {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="expansion-container">
+
+        <!-- --- SECTION 1: ARSENAL OF LEGENDS --- -->
+        <section class="arsenal-section">
+            <div class="expansion-header">
+                <h2>Relics of Destiny</h2>
+                <p class="expansion-subtext">"Power, Wisdom, and Courage are not merely virtues, but tools forged in steel and magic."</p>
+            </div>
+
+            <div class="arsenal-grid">
+                <!-- Item 1: Master Sword -->
+                <div class="relic-card">
+                    <div class="relic-img-container">
+                        <img src="https://placehold.co/200x150/0d2b25/d4b466?text=Master+Sword" alt="The Master Sword" class="relic-img">
+                    </div>
+                    <h3>The Master Sword</h3>
+                    <span class="relic-tagline">The Blade of Evil's Bane</span>
+                    <p class="relic-desc">Forged by the Goddess Hylia and tempered in sacred flames, this blade sleeps within the Lost Woods.</p>
+                </div>
+
+                <!-- Item 2: Hylian Shield -->
+                <div class="relic-card">
+                    <div class="relic-img-container">
+                        <img src="https://placehold.co/200x150/0d2b25/d4b466?text=Hylian+Shield" alt="Hylian Shield" class="relic-img">
+                    </div>
+                    <h3>Hylian Shield</h3>
+                    <span class="relic-tagline">The Absolute Defense</span>
+                    <p class="relic-desc">Bearing the crimson Loftwing crest, this imperishable shield has guarded the Hero against dragon fire.</p>
+                </div>
+
+                <!-- Item 3: Ocarina of Time -->
+                <div class="relic-card">
+                    <div class="relic-img-container">
+                        <img src="https://placehold.co/200x150/0d2b25/d4b466?text=Ocarina" alt="Ocarina of Time" class="relic-img">
+                    </div>
+                    <h3>Ocarina of Time</h3>
+                    <span class="relic-tagline">Key to the Sacred Realm</span>
+                    <p class="relic-desc">Its notes have the power to manipulate the flow of time, summon storms, and open the Door of Time.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- --- SECTION 2: THE TRIBES OF HYRULE --- -->
+        <section class="peoples-section">
+            <div class="expansion-header">
+                <h2>Tribes of Hyrule</h2>
+                <p class="expansion-subtext">A tapestry of diverse cultures, each guarding their own corner of the world.</p>
+            </div>
+
+            <div class="tribes-flex-container">
+                <!-- Tribe 1: Zora -->
+                <div class="tribe-card">
+                    <div class="tribe-medallion">
+                        <img src="https://placehold.co/200x200/004d40/ffffff?text=Zora" alt="Zora Champion">
+                    </div>
+                    <h3>The Zora</h3>
+                    <span class="tribe-home">Lanayru Waters</span>
+                    <p class="tribe-desc">Proud aquatic guardians known for grace, longevity, and unsurpassed skill in healing.</p>
+                </div>
+
+                <!-- Tribe 2: Goron -->
+                <div class="tribe-card">
+                    <div class="tribe-medallion">
+                        <img src="https://placehold.co/200x200/5d4037/ffffff?text=Goron" alt="Goron Champion">
+                    </div>
+                    <h3>The Gorons</h3>
+                    <span class="tribe-home">Death Mountain</span>
+                    <p class="tribe-desc">Hearty, rock-eating smiths with immense strength who thrive in volcanic heat.</p>
+                </div>
+
+                <!-- Tribe 3: Rito -->
+                <div class="tribe-card">
+                    <div class="tribe-medallion">
+                        <img src="https://placehold.co/200x200/01579b/ffffff?text=Rito" alt="Rito Champion">
+                    </div>
+                    <h3>The Rito</h3>
+                    <span class="tribe-home">Hebra Peaks</span>
+                    <p class="tribe-desc">Masters of the sky. These avian archers value freedom, their arrows riding the wind.</p>
+                </div>
+
+                <!-- Tribe 4: Gerudo -->
+                <div class="tribe-card">
+                    <div class="tribe-medallion">
+                        <img src="https://placehold.co/200x200/b71c1c/ffffff?text=Gerudo" alt="Gerudo Chief">
+                    </div>
+                    <h3>The Gerudo</h3>
+                    <span class="tribe-home">Gerudo Desert</span>
+                    <p class="tribe-desc">Fierce warriors of the sands. A proud people ruled by strength and ancient tradition.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- --- SECTION 3: THE BESTIARY (ENEMIES) --- -->
+        <section class="bestiary-section">
+            <div class="bestiary-bg-effect"></div> <!-- Malice overlay -->
+            
+            <div class="expansion-header">
+                <h2>The Calamity's Army</h2>
+                <p class="expansion-subtext">Where the light fades, monsters rise. These are the terrors that stalk the wilds.</p>
+            </div>
+
+            <div class="enemy-grid">
+                <!-- Enemy 1 -->
+                <div class="enemy-card">
+                    <div class="enemy-frame">
+                        <img src="https://placehold.co/300x220/3e0a0a/ff4d4d?text=Bokoblin" alt="Bokoblin">
+                    </div>
+                    <div class="enemy-info">
+                        <h3>Bokoblin</h3>
+                        <span class="enemy-role">Foot Soldier</span>
+                        <p class="enemy-desc">The common scourge of Hyrule. They hunt in packs and wield crude weaponry to overwhelm travelers.</p>
+                    </div>
+                </div>
+
+                <!-- Enemy 2 -->
+                <div class="enemy-card">
+                    <div class="enemy-frame">
+                        <img src="https://placehold.co/300x220/3e0a0a/ff4d4d?text=Moblin" alt="Moblin">
+                    </div>
+                    <div class="enemy-info">
+                        <h3>Moblin</h3>
+                        <span class="enemy-role">Heavy Infantry</span>
+                        <p class="enemy-desc">Towering brutes with immense reach. Their raw strength can shatter shields in a single blow.</p>
+                    </div>
+                </div>
+
+                <!-- Enemy 3 -->
+                <div class="enemy-card">
+                    <div class="enemy-frame">
+                        <img src="https://placehold.co/300x220/3e0a0a/ff4d4d?text=Lizalfos" alt="Lizalfos">
+                    </div>
+                    <div class="enemy-info">
+                        <h3>Lizalfos</h3>
+                        <span class="enemy-role">Ambush Predator</span>
+                        <p class="enemy-desc">Cunning reptilian warriors that camouflage with their surroundings and strike with speed.</p>
+                    </div>
+                </div>
+
+                 <!-- Enemy 4 -->
+                <div class="enemy-card">
+                    <div class="enemy-frame">
+                        <img src="https://placehold.co/300x220/3e0a0a/ff4d4d?text=Lynel" alt="Lynel">
+                    </div>
+                    <div class="enemy-info">
+                        <h3>Lynel</h3>
+                        <span class="enemy-role">Apex Threat</span>
+                        <p class="enemy-desc">A terrifying beast that fears nothing. A single Lynel is a match for an entire battalion of knights.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>
