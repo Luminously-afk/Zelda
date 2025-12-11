@@ -371,6 +371,9 @@ const BADING_COOLDOWN = 8000;
 let benedictOverlay;
 let lastBenedictTime = 0;
 const BENEDICT_COOLDOWN = 8000;
+let loveOverlay;
+let lastLoveTime = 0;
+const LOVE_COOLDOWN = 8000;
 let aizyOverlay;
 let princessOverlay;
 let princessTriggeredAt = 0;
@@ -606,6 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initShakeEasterEgg();
     initBadingOverlay();
     initBenedictOverlay();
+    initLoveOverlay();
     initAizyPrincessOverlays();
 });
 
@@ -628,6 +632,9 @@ document.addEventListener('keydown', (e) => {
     } else if (swordKeyBuffer.includes('benedict')) {
         swordKeyBuffer = '';
         triggerBenedictEasterEgg();
+    } else if (swordKeyBuffer.includes('love')) {
+        swordKeyBuffer = '';
+        triggerLoveEasterEgg();
     } else if (swordKeyBuffer.includes('aizy')) {
         swordKeyBuffer = '';
         triggerAizyEasterEgg();
@@ -959,6 +966,40 @@ function hideBenedictEasterEgg() {
     benedictOverlay.setAttribute('aria-hidden', 'true');
     benedictOverlay.style.opacity = '';
     benedictOverlay.style.pointerEvents = '';
+}
+
+function initLoveOverlay() {
+    loveOverlay = document.getElementById('love-overlay');
+    const close = document.getElementById('love-close');
+    if (close) close.addEventListener('click', hideLoveEasterEgg);
+    window.triggerLoveEasterEgg = triggerLoveEasterEgg;
+}
+
+function triggerLoveEasterEgg() {
+    if (!loveOverlay) initLoveOverlay();
+    if (!loveOverlay) return;
+    const now = Date.now();
+    if (now - lastLoveTime < LOVE_COOLDOWN) return;
+    lastLoveTime = now;
+    loveOverlay.classList.add('show');
+    loveOverlay.setAttribute('aria-hidden', 'false');
+    loveOverlay.style.opacity = '1';
+    loveOverlay.style.pointerEvents = 'auto';
+    const sketch = loveOverlay.querySelector('.love-drawing');
+    if (sketch) {
+        sketch.classList.remove('draw-start');
+        void sketch.offsetWidth;
+        sketch.classList.add('draw-start');
+    }
+    setTimeout(hideLoveEasterEgg, 7000);
+}
+
+function hideLoveEasterEgg() {
+    if (!loveOverlay) return;
+    loveOverlay.classList.remove('show');
+    loveOverlay.setAttribute('aria-hidden', 'true');
+    loveOverlay.style.opacity = '';
+    loveOverlay.style.pointerEvents = '';
 }
 
 function initAizyPrincessOverlays() {
